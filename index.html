@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Langtons Ant</title>
+
+    <style>
+        html {
+            margin: 0px;
+            padding: 0px;
+        }
+        
+        root {
+            --columns-and-rows: 10;
+        }
+        
+        #map {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(100, 1fr);
+            grid-template-rows: repeat(100, 1fr);
+            height: 100vh;
+        }
+        
+        .square {
+            border: 1px solid black;
+            background-color: white;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .black {
+            background-color: black;
+        }
+        
+        .ant {
+            background-color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map">
+        <!-- This gets populated by a grid through JS
+     Each span element has the ID of its coordinates, from 0  -->
+    </div>
+
+    <script>
+        let rows = 100;
+        let cols = 100;
+        let grid = [];
+        let ant = {
+            steps: 0,
+            xpos: 49,
+            ypos: 49,
+            dir: 0, //0 up, 1 right, 2 down, 3 left
+            checkGrid: function() {
+                let x = ant.xpos;
+                let y = ant.ypos;
+                if (grid[x][y] == 0) { //check if white change dir
+                    console.log('white');
+                    document.getElementById(x + '-' + y).classList.toggle('black');
+                    grid[x][y] = 1;
+                    if (ant.dir < 3) {
+                        ant.dir++;
+                    } else {
+                        ant.dir = 0;
+                    };
+                } else if (grid[x][y] == 1) { //check if black change dir
+                    console.log('black')
+                    document.getElementById(x + '-' + y).classList.toggle('black');
+                    grid[x][y] = 0;
+                    if (ant.dir > 0) {
+                        ant.dir--;
+                    } else {
+                        ant.dir = 3;
+                    };
+                }
+            },
+            moveAnt: function() {
+                //function to toggle previous position class off, move assess and toggle.
+                let antPos = document.getElementById(ant.xpos + '-' + ant.ypos);
+                antPos.classList.toggle('ant');
+                switch (ant.dir) {
+                    case 0:
+                        ant.ypos--;
+                        break;
+                    case 1:
+                        ant.xpos++;
+                        break;
+                    case 2:
+                        ant.ypos++;
+                        break;
+                    case 3:
+                        ant.xpos--;
+                        break;
+                }
+                antPos = document.getElementById(ant.xpos + '-' + ant.ypos);
+                antPos.classList.toggle('ant');
+                ant.checkGrid();
+                ant.steps++;
+                console.log(ant.steps);
+            }
+        }
+
+        //function to create a grid, defined cols and rows.
+        let createGrid = function(cols, rows) {
+            let arr2d = new Array(cols);
+            for (let i = 0; i < arr2d.length; i++) {
+                arr2d[i] = new Array(rows);
+            }
+            return arr2d;
+        }
+
+        // Populate grid with values and load spans for each.
+        grid = createGrid(cols, rows);
+        for (let i = 0; i < cols; i++) {
+            for (let j = 0; j < rows; j++) {
+                grid[i][j] = 0;
+                //spans getting made, co-ords for ids.
+                let block = document.createElement('span');
+                block.className = "square";
+                block.id = i + '-' + j;
+                document.getElementById('map').appendChild(block);
+            }
+        }
+        let placeAnt = function() {
+            document.getElementById(ant.xpos + '-' + ant.ypos).classList.toggle('ant');
+        }
+
+        placeAnt();
+    </script>
+</body>
+
+</html>
