@@ -58,7 +58,7 @@ let ant = {
         ant.checkGrid();
         //increse step count
         ant.steps++;
-        console.log(ant.steps);
+//         console.log(ant.steps);
     }
 
 }
@@ -89,5 +89,6 @@ function draw() {
             rect(x, y, resolution - 1, resolution - 1);
         }
     }
-    ant.moveAnt();
 }
+
+setInterval(ant.moveAnt, 100);
